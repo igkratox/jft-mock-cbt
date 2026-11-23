@@ -111,6 +111,9 @@ input:focus,select:focus{outline:2px solid var(--ac);border-color:var(--ac)}
 .poster-card{border:2px solid var(--ac);border-radius:12px;background:var(--bg);overflow:hidden}
 .poster-hd{background:var(--ac);color:var(--acx);padding:10px 14px;font-weight:800;font-size:16px;text-align:center}
 .poster-bd{padding:14px;white-space:pre-line;font-size:14px;line-height:1.7}
+.ticket-card{border:2px solid #0284c7;border-radius:12px;background:linear-gradient(135deg,rgba(186,230,253,.35),rgba(224,242,254,.2));padding:14px 16px;font-family:monospace,system-ui}
+[data-theme="dark"] .ticket-card{background:linear-gradient(135deg,rgba(2,132,199,.2),rgba(15,23,42,.3))}
+.ticket-hd{display:flex;justify-content:space-between;align-items:center;border-bottom:1.5px dashed #0284c7;padding-bottom:8px;margin-bottom:8px;font-weight:800;color:#0284c7;font-size:15px}
 .dial-card{border:1px solid var(--bd);border-radius:12px;background:var(--bg);padding:12px 14px;font-size:15px;line-height:1.75}
 .dial-line{margin:4px 0}
 .dial-spk{font-weight:800;color:var(--ac);margin-right:6px}
@@ -473,6 +476,8 @@ function renderStimulus(q){
       h+=`<div class="stim-box coupon-card"><div class="coupon-badge">${esc(c.badge||'SPECIAL COUPON')}</div><div style="font-weight:800;font-size:16px;margin-bottom:6px">${esc(c.title||'')}</div><div style="white-space:pre-line;font-size:14px;line-height:1.65">${esc(c.body)}</div></div>`;
     }else if(c.type==='poster'){
       h+=`<div class="stim-box poster-card"><div class="poster-hd">${esc(c.title||'お知らせ')}</div><div class="poster-bd">${esc(c.body)}</div></div>`;
+    }else if(c.type==='ticket'){
+      h+=`<div class="stim-box ticket-card"><div class="ticket-hd"><span>🎫 ${esc(c.title||'乗車券 / 案内')}</span><span>${esc(c.badge||'JR / BUS')}</span></div><div style="white-space:pre-line;font-size:14px;line-height:1.7">${esc(c.body)}</div></div>`;
     }
   }
   if(q.dialogue&&Array.isArray(q.dialogue)){
