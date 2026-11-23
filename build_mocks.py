@@ -438,6 +438,100 @@ SEC3_LISTEN_POOL = [
         ],
         "qs":[("Listen to the conversation.", "おんなの 人は 何を じゅんび しますか。", ["肉と 野菜", "飲み物", "おさらと コップ"], "easy", "মহিলা মাংস ও সবজি (肉と 野菜) রেডি করবেন।")]
     },
+    {
+        "id":"L17",
+        "turns":[
+            ("young_f","あした、駅まで 何で 行きますか。"),
+            ("young_m","雨が ふりそうですから、自転車じゃ なくて、電車で 行きます。"),
+            ("young_f","そうですね。わたしも 電車に します。")
+        ],
+        "qs":[("Listen and look at the illustrations. How will the man go to the station?", "おとこの 人は 何で 駅へ 行きますか。", ["電車 (Train)", "自転車 (Bicycle)", "買い物 (Walk/Shop)"], "easy", "বৃষ্টি হতে পারে তাই সাইকেলে না গিয়ে ট্রেনে (電車) যাবেন।", ["train", "bicycle", "shopping"])]
+    },
+    {
+        "id":"L18",
+        "turns":[
+            ("staff_m","すみません、郵便局は どこに ありますか。"),
+            ("staff_f","この みちを まっすぐ 行って、つぎの かどを 右に まがって ください。ひだりがわに ありますよ。"),
+            ("staff_m","つぎの かどを 右ですね。ありがとうございます。")
+        ],
+        "qs":[("Listen and choose the correct illustration.", "つぎの かどを どう しますか。", ["右に まがります", "左に まがります", "まっすぐ 行きます"], "easy", "পরের মোড়ে ডান দিকে (右に まがる) ঘুরতে বলা হয়েছে।", ["turn_right", "turn_left", "straight"])]
+    },
+    {
+        "id":"L19",
+        "turns":[
+            ("young_m","あれ、天気予報を 見ましたか。あしたは どう ですか。"),
+            ("calm_f","あしたは 朝から 雪が ふるそうですよ。とても さむく なりますから、あたたかい ふくを きて くださいね。"),
+            ("young_m","わかりました。ありがとう。")
+        ],
+        "qs":[("Listen and choose the correct weather.", "あしたの 天気は どう ですか。", ["雪が ふります", "雨が ふります", "あついです"], "easy", "আগামীকাল সকাল থেকে তুষারপাত (雪) হবে।", ["snow", "rain", "hot"])]
+    },
+    {
+        "id":"L20",
+        "turns":[
+            ("young_f","すみません、山田さんは いま どこですか。"),
+            ("manager_m","ああ、山田さんは さっき からだが つらいと 言って、びょういんへ 行きましたよ。ねつが あるそうです。"),
+            ("young_f","そうですか。しんぱいですね。")
+        ],
+        "qs":[("Listen and choose the correct place.", "山田さんは いま どこに いますか。", ["びょういん", "会社", "スーパー"], "medium", "ইয়ামাদা-সান জ্বরের কারণে হাসপাতালে (びょういん) গেছেন।", ["hospital", "study", "shopping"])]
+    },
+    {
+        "id":"L21",
+        "turns":[
+            ("staff_f","いらっしゃいませ。いらっしゃいませ。きょうは 野菜が 安いですよ。"),
+            ("young_m","すみません、この りんごは ひとつ いくらですか。"),
+            ("staff_f","ひとつ 150円ですが、3つで 400円に なります。"),
+            ("young_m","じゃあ、3つ おねがいします。")
+        ],
+        "qs":[
+            ("Listen to the shop conversation.", "おとこの 人は いくら はらいますか。", ["400円", "150円", "450円"], "medium", "৩টি একসাথে নিলে ৪০০ ইয়েন (3つで 400円), তাই ৪০০ ইয়েন দেবেন।"),
+            ("Listen to the shop conversation.", "おとこの 人は りんごを いくつ 買いますか。", ["3つ", "1つ", "4つ"], "easy", "「3つ おねがいします」 বলেছেন।")
+        ]
+    },
+    {
+        "id":"L22",
+        "turns":[
+            ("announcer_f","お知らせ します。きょう 午後 2時から、町民センターで 日本語教室が あります。ペンと ノートを 持って、1時50分までに 2階の 部屋に あつまって ください。")
+        ],
+        "qs":[
+            ("Listen to the announcement.", "日本語教室は 何時から 始まりますか。", ["午後 2時", "午後 1時50分", "午前 2時"], "medium", "ক্লাস শুরু হবে বিকাল ২টায় (午後 2時から), তবে ১:৫০-এর মধ্যে আসতে বলা হয়েছে।"),
+            ("Listen to the announcement.", "どこに あつまりますか。", ["2階の 部屋", "1階の 部屋", "図書館"], "easy", "২য় তলার রুমে (2階の 部屋) একত্রিত হতে বলা হয়েছে।")
+        ]
+    },
+    {
+        "id":"L23",
+        "turns":[
+            ("young_m","あしたの 朝、何時に おきますか。"),
+            ("young_f","いつもは 7時に おきますが、あしたは 早い 電車に 乗るので、5時半に おきます。"),
+            ("young_m","5時半ですか。早いですね。")
+        ],
+        "qs":[("Listen to the conversation.", "おんなの 人は あした 何時に おきますか。", ["5時30分", "7時", "6時"], "easy", "আগামীকাল সকালের ট্রেনের জন্য ৫:৩০ (5時半) এ উঠবেন।")]
+    },
+    {
+        "id":"L24",
+        "turns":[
+            ("calm_f","すみません、この ゴミは いつ 出せば いいですか。"),
+            ("staff_m","ペットボトルですね。ペットボトルは 木曜日の 朝 8時までに 出して ください。もえる ごみは 火曜日と 金曜日ですよ。"),
+            ("calm_f","木曜日の 朝 8時までですね。わかりました。")
+        ],
+        "qs":[("Listen to the conversation.", "ペットボトルは いつ 出しますか。", ["木曜日の 朝 8時まで", "火曜日の 朝", "金曜日の 夜"], "medium", "প্লাস্টিকের বোতল বৃহস্পতিবার সকাল ৮টার মধ্যে (木曜日の 朝 8時まで) ফেলতে হবে।")]
+    },
+    {
+        "id":"L25",
+        "turns":[
+            ("young_f","あれ、さいふが ありません。どこに おとしたかなあ。"),
+            ("young_m","さっき コンビニで コーヒーを 買った とき、カウンターの うえに おいて いませんでしたか。"),
+            ("young_f","あ、そうかも！ いまから 電話して 聞いて みます。")
+        ],
+        "qs":[("Listen and choose what the woman will do.", "おんなの 人は これから 何を しますか。", ["コンビニに 電話します", "あたらしい さいふを 買います", "おまわりさんに 会います"], "medium", "কনবিনিতে ফোন করে জিজ্ঞেস করবেন (電話して 聞いて みます)।", ["phone", "wallet", "shopping"])]
+    },
+    {
+        "id":"L26",
+        "turns":[
+            ("manager_m","きょうは これから 工場の そとで 仕事が あります。とても あついですから、かならず ぼうしを かぶって、水を よく 飲んで ください。"),
+            ("young_m","はい、わかりました。")
+        ],
+        "qs":[("Listen to the manager.", "しごとの とき、何を 気をつけますか。", ["水を よく 飲みます", "エアコンを つけます", "くすりを 飲みます"], "easy", "গরমে কাজের সময় অবশ্যই পানি পান করতে (水を よく 飲んで ください) বলা হয়েছে।", ["drink", "hot", "medicine"])]
+    },
 ]
 
 # ---------------- GENERATE AUDIO CLIPS ----------------
@@ -476,13 +570,21 @@ async def generate_all_audio():
             await build_audio_clip(it)
     await asyncio.gather(*(run_one(it) for it in SEC3_LISTEN_POOL))
 
-def make_q(qid, prompt, jp, opts_cfirst, diff, cat, exp, svg=None, card=None, audio=None, transcript=None):
+def make_q(qid, prompt, jp, opts_cfirst, diff, cat, exp, svg=None, card=None, audio=None, transcript=None, opt_svgs=None):
     correct = opts_cfirst[0]
-    opts = list(opts_cfirst)
-    random.shuffle(opts)
+    if opt_svgs and len(opt_svgs) == len(opts_cfirst):
+        paired = list(zip(opts_cfirst, opt_svgs))
+        random.shuffle(paired)
+        opts = [p[0] for p in paired]
+        svgs_shuf = [p[1] for p in paired]
+    else:
+        opts = list(opts_cfirst)
+        random.shuffle(opts)
+        svgs_shuf = None
     ans = opts.index(correct)
     obj = {"id": qid, "prompt": prompt, "jp": jp, "opts": opts, "ans": ans, "diff": diff, "cat": cat, "exp": exp}
     if svg: obj["svg"] = svg
+    if svgs_shuf: obj["optSvgs"] = svgs_shuf
     if card: obj["card"] = card
     if audio: obj["audio"] = audio
     if transcript: obj["transcript"] = transcript
@@ -543,9 +645,11 @@ def build_mock(m_num):
         if len(s3_qs) >= c3: break
         transcript = "\n".join(txt for _, txt in item["turns"])
         aud_url = f"audio/{item['id']}.mp3"
-        for pr, jp, o, d, e in item["qs"]:
+        for q_tup in item["qs"]:
             if len(s3_qs) >= c3: break
-            s3_qs.append(make_q(f"m{m_num}_s3_{len(s3_qs)}", pr, jp, o, d, "Listening", e, audio=aud_url, transcript=transcript))
+            pr, jp, o, d, e = q_tup[:5]
+            osvgs = q_tup[5] if len(q_tup) > 5 else None
+            s3_qs.append(make_q(f"m{m_num}_s3_{len(s3_qs)}", pr, jp, o, d, "Listening", e, audio=aud_url, transcript=transcript, opt_svgs=osvgs))
 
     # Section 4: Reading Comprehension (Email, SNS, Coupon, Poster)
     r_pool = list(SEC4_ITEMS)
