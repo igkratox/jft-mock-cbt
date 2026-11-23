@@ -13,7 +13,7 @@ input,textarea{font-family:inherit;padding:8px 10px;border:1px solid #cbd5e1;bor
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
 .card{background:#fff;border:2px solid #cbd5e1;border-radius:14px;padding:12px;text-align:center;box-shadow:0 2px 8px rgba(15,23,42,.05);display:flex;flex-direction:column;gap:6px}
 .card.flagged{border-color:#dc2626;background:#fef2f2}
-.card svg{width:180px;height:140px;max-width:100%;margin:0 auto}
+.card svg{width:190px;height:145px;max-width:100%;margin:0 auto;filter:drop-shadow(0 8px 12px rgba(15,23,42,.15))}
 .jp{font-size:17px;font-weight:800;color:#0f766e}
 .bn{font-size:13px;color:#334155;font-weight:600}
 .key{font-size:11px;color:#64748b;font-family:monospace}
@@ -134,8 +134,14 @@ function render(){
     const [jp,bn]=META[k]||[k,'—'];
     const on=!!(fb[k]&&fb[k].on);
     const note=(fb[k]&&fb[k].note)||'';
+    const uid='r'+k;
+    const svg25=SVGS[k]
+      .replace(/stroke="#(1e293b|334155|0f172a|475569|451a03|78350f)"/gi,'stroke="#1e293b" stroke-opacity="0.28"')
+      .replace(/stroke-width="2\.5"/g,'stroke-width="1.6"')
+      .replace(/<svg([^>]*)>/i,`<svg$1><defs><filter id="${uid}sh" x="-15%" y="-15%" width="130%" height="135%"><feDropShadow dx="2" dy="4" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.22"/></filter><radialGradient id="${uid}gl" cx="35%" cy="28%" r="70%"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/><stop offset="60%" stop-color="#ffffff" stop-opacity="0"/><stop offset="100%" stop-color="#0f172a" stop-opacity="0.14"/></radialGradient></defs><g filter="url(#${uid}sh)">`)
+      .replace(/<\/svg>/i,`</g><rect x="2" y="2" width="176" height="136" rx="12" fill="url(#${uid}gl)" pointer-events="none"/></svg>`);
     return `<div class="card${on?' flagged':''}" data-k="${k}">
-      ${SVGS[k]}
+      ${svg25}
       <div class="jp">${jp}</div>
       <div class="bn">${bn}</div>
       <div class="key">key: ${k}</div>
