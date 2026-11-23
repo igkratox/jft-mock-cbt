@@ -179,7 +179,8 @@ input:focus,select:focus{outline:2px solid var(--ac);border-color:var(--ac)}
     <button type="button" class="tab-btn" data-f="todo">Unattempted</button>
     <button type="button" class="tab-btn" data-f="done">Completed</button>
     <button type="button" class="tab-btn" data-f="pass">Passed</button>
-    <input id="searchMockIn" placeholder="Search mock (e.g. Mock 1, X, Y, Z)..." style="flex:1;min-width:180px;padding:7px 12px">
+    <button type="button" class="btn" id="randomMockBtn" style="padding:7px 13px;font-size:13px">🎲 Random Mock</button>
+    <input id="searchMockIn" placeholder="Search mock (e.g. Mock 1, 25, 50)..." style="flex:1;min-width:170px;padding:7px 12px">
   </div>
 
   <div id="mockList" class="mock-grid"><div class="mu">Loading mocks...</div></div>
@@ -291,7 +292,15 @@ const SVGS={
   shopping:`<svg viewBox="0 0 180 140"><path d="M52 52 h76 l-8 62 H60 z" fill="#f59e0b" stroke="#334155" stroke-width="2.5"/><path d="M72 52 V38 a18 18 0 0 1 36 0 V52" fill="none" stroke="#334155" stroke-width="4"/></svg>`,
   pray:`<svg viewBox="0 0 180 140"><rect x="36" y="34" width="108" height="12" rx="4" fill="#dc2626"/><rect x="48" y="46" width="12" height="66" fill="#dc2626"/><rect x="120" y="46" width="12" height="66" fill="#dc2626"/><rect x="44" y="54" width="92" height="8" fill="#b91c1c"/><circle cx="90" cy="86" r="14" fill="#fde68a" stroke="#334155" stroke-width="2"/><path d="M84 102 L90 92 L96 102" fill="none" stroke="#334155" stroke-width="3"/></svg>`,
   phone:`<svg viewBox="0 0 180 140"><rect x="64" y="22" width="52" height="96" rx="10" fill="#1e293b"/><rect x="70" y="32" width="40" height="70" rx="4" fill="#38bdf8"/><circle cx="90" cy="110" r="4" fill="#94a3b8"/></svg>`,
-  study:`<svg viewBox="0 0 180 140"><polygon points="34,42 90,54 90,108 34,96" fill="#fff" stroke="#334155" stroke-width="2.5"/><polygon points="146,42 90,54 90,108 146,96" fill="#f8fafc" stroke="#334155" stroke-width="2.5"/><line x1="46" y1="62" x2="78" y2="68" stroke="#64748b" stroke-width="2.5"/><line x1="46" y1="76" x2="78" y2="82" stroke="#64748b" stroke-width="2.5"/><line x1="102" y1="68" x2="134" y2="62" stroke="#64748b" stroke-width="2.5"/></svg>`
+  study:`<svg viewBox="0 0 180 140"><polygon points="34,42 90,54 90,108 34,96" fill="#fff" stroke="#334155" stroke-width="2.5"/><polygon points="146,42 90,54 90,108 146,96" fill="#f8fafc" stroke="#334155" stroke-width="2.5"/><line x1="46" y1="62" x2="78" y2="68" stroke="#64748b" stroke-width="2.5"/><line x1="46" y1="76" x2="78" y2="82" stroke="#64748b" stroke-width="2.5"/><line x1="102" y1="68" x2="134" y2="62" stroke="#64748b" stroke-width="2.5"/></svg>`,
+  umbrella:`<svg viewBox="0 0 180 140"><path d="M36 74 a54 50 0 0 1 108 0 z" fill="#0ea5e9" stroke="#0369a1" stroke-width="2.5"/><line x1="90" y1="20" x2="90" y2="108" stroke="#334155" stroke-width="4"/><path d="M90 108 a10 10 0 0 0 20 0" fill="none" stroke="#334155" stroke-width="4" stroke-linecap="round"/></svg>`,
+  clock:`<svg viewBox="0 0 180 140"><circle cx="90" cy="70" r="44" fill="#fff" stroke="#334155" stroke-width="4"/><circle cx="90" cy="70" r="4" fill="#0f172a"/><line x1="90" y1="70" x2="90" y2="40" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/><line x1="90" y1="70" x2="116" y2="70" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/></svg>`,
+  garbage:`<svg viewBox="0 0 180 140"><rect x="58" y="46" width="64" height="72" rx="8" fill="#64748b" stroke="#334155" stroke-width="2.5"/><rect x="50" y="34" width="80" height="12" rx="4" fill="#475569"/><rect x="76" y="24" width="28" height="10" rx="4" fill="#334155"/><line x1="74" y1="60" x2="74" y2="104" stroke="#cbd5e1" stroke-width="3"/><line x1="90" y1="60" x2="90" y2="104" stroke="#cbd5e1" stroke-width="3"/><line x1="106" y1="60" x2="106" y2="104" stroke="#cbd5e1" stroke-width="3"/></svg>`,
+  camera:`<svg viewBox="0 0 180 140"><rect x="38" y="44" width="104" height="66" rx="12" fill="#334155"/><rect x="68" y="32" width="44" height="14" rx="4" fill="#475569"/><circle cx="90" cy="77" r="22" fill="#94a3b8" stroke="#fff" stroke-width="3"/><circle cx="90" cy="77" r="11" fill="#0f172a"/></svg>`,
+  ticket:`<svg viewBox="0 0 180 140"><rect x="30" y="44" width="120" height="52" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="3"/><line x1="114" y1="44" x2="114" y2="96" stroke="#d97706" stroke-width="2.5" stroke-dasharray="5,4"/><text x="72" y="76" text-anchor="middle" font-size="18" font-weight="bold" fill="#b45309">TICKET</text><text x="132" y="76" text-anchor="middle" font-size="14" font-weight="bold" fill="#dc2626">¥500</text></svg>`,
+  cooking:`<svg viewBox="0 0 180 140"><ellipse cx="82" cy="86" rx="44" ry="18" fill="#334155"/><rect x="124" y="80" width="34" height="10" rx="4" fill="#92400e"/><circle cx="72" cy="84" r="10" fill="#fff"/><circle cx="72" cy="84" r="5" fill="#f59e0b"/><path d="M68 54 q6-10 0-20 M92 54 q6-10 0-20" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/></svg>`,
+  clean:`<svg viewBox="0 0 180 140"><line x1="114" y1="24" x2="72" y2="92" stroke="#92400e" stroke-width="6" stroke-linecap="round"/><polygon points="56,88 88,104 72,124 38,108" fill="#f59e0b" stroke="#b45309" stroke-width="2"/><text x="128" y="64" font-size="22" fill="#0ea5e9">✦</text><text x="142" y="86" font-size="16" fill="#38bdf8">✦</text></svg>`,
+  bank:`<svg viewBox="0 0 180 140"><polygon points="90,26 32,56 148,56" fill="#0f766e"/><rect x="38" y="56" width="104" height="54" fill="#e2e8f0" stroke="#334155" stroke-width="2"/><rect x="52" y="66" width="14" height="44" fill="#94a3b8"/><rect x="83" y="66" width="14" height="44" fill="#94a3b8"/><rect x="114" y="66" width="14" height="44" fill="#94a3b8"/><rect x="32" y="110" width="116" height="10" fill="#334155"/></svg>`
 };
 
 function loadState(){
@@ -380,6 +389,14 @@ document.querySelectorAll('.filter-row .tab-btn').forEach(b=>b.onclick=()=>{
   b.classList.add('sel');curFilter=b.dataset.f;renderHome();
 });
 $('searchMockIn').oninput=renderHome;
+$('randomMockBtn').onclick=()=>{
+  const st=loadState(),resMap=st.results||{};
+  const todo=mockIndex.filter(m=>!resMap[m.id]);
+  const pool=todo.length?todo:mockIndex;
+  if(!pool.length)return;
+  const pick=pool[Math.floor(Math.random()*pool.length)];
+  launchMock(pick.id);
+};
 
 async function launchMock(id){
   try{
