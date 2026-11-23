@@ -13,16 +13,16 @@ AUDIO_DIR = os.path.join(BASE_DIR, "audio")
 os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs(AUDIO_DIR, exist_ok=True)
 
-# 8 distinct voice personas for natural multi-speaker Listening
+# 8 distinct voice personas for natural, JFT-A2 learner-friendly Listening pace
 PERSONAS = {
-    "young_f":     ("ja-JP-NanamiNeural", "+8Hz",  "+2%"),
-    "staff_f":     ("ja-JP-NanamiNeural", "+0Hz",  "-4%"),
-    "calm_f":      ("ja-JP-NanamiNeural", "-10Hz", "-6%"),
-    "announcer_f": ("ja-JP-NanamiNeural", "-2Hz",  "-8%"),
-    "young_m":     ("ja-JP-KeitaNeural",  "+8Hz",  "+2%"),
-    "staff_m":     ("ja-JP-KeitaNeural",  "+0Hz",  "-4%"),
-    "manager_m":   ("ja-JP-KeitaNeural",  "-12Hz", "-6%"),
-    "announcer_m": ("ja-JP-KeitaNeural",  "-4Hz",  "-8%"),
+    "young_f":     ("ja-JP-NanamiNeural", "+8Hz",  "-12%"),
+    "staff_f":     ("ja-JP-NanamiNeural", "+0Hz",  "-15%"),
+    "calm_f":      ("ja-JP-NanamiNeural", "-10Hz", "-16%"),
+    "announcer_f": ("ja-JP-NanamiNeural", "-2Hz",  "-18%"),
+    "young_m":     ("ja-JP-KeitaNeural",  "+8Hz",  "-12%"),
+    "staff_m":     ("ja-JP-KeitaNeural",  "+0Hz",  "-15%"),
+    "manager_m":   ("ja-JP-KeitaNeural",  "-12Hz", "-16%"),
+    "announcer_m": ("ja-JP-KeitaNeural",  "-4Hz",  "-18%"),
 }
 
 # ---------------- SECTION 1: SCRIPT & VOCABULARY POOLS ----------------
@@ -1073,7 +1073,7 @@ async def build_audio_clip(item):
     try:
         parts = []
         sil = os.path.join(tmp, "sil.mp3")
-        subprocess.run(["ffmpeg", "-y", "-f", "lavfi", "-i", "anullsrc=r=24000:cl=mono", "-t", "0.4", "-q:a", "9", sil], capture_output=True)
+        subprocess.run(["ffmpeg", "-y", "-f", "lavfi", "-i", "anullsrc=r=24000:cl=mono", "-t", "0.55", "-q:a", "9", sil], capture_output=True)
         for idx, (pers, txt) in enumerate(item["turns"]):
             p_file = os.path.join(tmp, f"t{idx}.mp3")
             await synth_line(pers, txt, p_file)

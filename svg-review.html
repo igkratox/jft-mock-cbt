@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SVG Illustrations Review — JFT-Basic CBT</title>
+<style>
+body{margin:0;font-family:system-ui,-apple-system,"Noto Sans JP","Noto Sans Bengali",sans-serif;background:#f1f5f9;color:#0f172a;padding:16px}
+.wrap{max-width:1100px;margin:0 auto}
+.hd{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px;background:#fff;padding:14px 18px;border-radius:14px;border:1px solid #cbd5e1}
+input{padding:9px 12px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px;min-width:220px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.card{background:#fff;border:1px solid #cbd5e1;border-radius:14px;padding:12px;text-align:center;box-shadow:0 2px 8px rgba(15,23,42,.05)}
+.card svg{width:180px;height:140px;max-width:100%}
+.jp{font-size:18px;font-weight:800;color:#0f766e;margin-top:8px}
+.bn{font-size:14px;color:#334155;font-weight:600;margin-top:2px}
+.key{font-size:11px;color:#64748b;margin-top:4px;font-family:monospace}
+a.btn{display:inline-block;padding:8px 14px;border-radius:10px;background:#0f766e;color:#fff;text-decoration:none;font-weight:700;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hd">
+    <div>
+      <h2 style="margin:0">SVG Illustrations Review (<span id="cnt">0</span>)</h2>
+      <div style="font-size:13px;color:#64748b">Sob SVG chobi + Japanese + Bangla ortho review korar jonno</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <input id="q" placeholder="Search (e.g. clean, 電車, গরম)...">
+      <a class="btn" href="index.html">← Back to Mock App</a>
+    </div>
+  </div>
+  <div id="grid" class="grid">Loading...</div>
+</div>
+<script>
+const META={
+  hot:["あつい (暑い)","গরম"],
+  cold:["さむい (寒い)","ঠান্ডা"],
+  rain:["あめ (雨) / 雨が降ります","বৃষ্টি"],
+  snow:["ゆき (雪) / 雪が降ります","তুষারপাত / বরফ"],
+  turn_right:["みぎに まがる (右に曲がる)","ডান দিকে ঘোরা"],
+  turn_left:["ひだりに まがる (左に曲がる)","বাম দিকে ঘোরা"],
+  straight:["まっすぐ いく (まっすぐ行く)","সোজা যাওয়া"],
+  fever:["ねつ (熱)","জ্বর"],
+  medicine:["くすり (薬)","ওষুধ"],
+  laugh:["わらう (笑う)","হাসা"],
+  sing:["うたう (歌う)","গান গাওয়া"],
+  sleep:["ねる (寝る)","ঘুমানো"],
+  eat:["たべる (食べる)","খাওয়া"],
+  drink:["のむ (飲む)","পান করা"],
+  bicycle:["じてんしゃ (自転車)","সাইকেল"],
+  train:["でんしゃ (電車)","ট্রেন"],
+  wallet:["さいふ (財布)","মানিব্যাগ"],
+  hospital:["びょういん (病院)","হাসপাতাল"],
+  shopping:["かいもの (買い物)","কেনাকাটা"],
+  pray:["おいのり (お祈り) / じんじゃ","প্রার্থনা / মন্দির"],
+  phone:["けいたい / スマホ","মোবাইল ফোন"],
+  study:["べんきょう (勉強)","পড়াশোনা"],
+  umbrella:["かさ (傘)","ছাতা"],
+  clock:["とけい (時計)","ঘড়ি"],
+  garbage:["ごみ (ゴミ)","ময়লা / আবর্জনা"],
+  camera:["カメラ","ক্যামেরা"],
+  ticket:["きっぷ / チケット","টিকিট"],
+  cooking:["りょうり (料理)","রান্না করা"],
+  clean:["そうじ (掃除)","পরিষ্কার করা"],
+  bank:["ぎんこう (銀行)","ব্যাংক"],
+  cat:["ねこ (猫)","বিড়াল"],
+  dog:["いぬ (犬)","কুকুর"],
+  fish:["さかな (魚)","মাছ"],
+  bread:["パン","পাউরুটি"],
+  apple:["りんご","আপেল"],
+  coffee:["コーヒー","কফি"],
+  shirt:["シャツ","শার্ট"],
+  shoes:["くつ (靴)","জুতা"],
+  glasses:["めがね (眼鏡)","চশমা"],
+  hat:["ぼうし (帽子)","টুপি"],
+  key:["かぎ (鍵)","চাবি"],
+  map:["ちず (地図)","মানচিত্র / ম্যাপ"],
+  letter:["てがみ (手紙)","চিঠি"],
+  newspaper:["しんぶん (新聞)","খবরের কাগজ"],
+  tv:["テレビ","টিভি"],
+  computer:["パソコン","কম্পিউটার"],
+  desk:["つくえ (机)","টেবিল / ডেস্ক"],
+  stairs:["かいだん (階段)","সিঁড়ি"],
+  park:["こうえん (公園)","পার্ক"],
+  school:["がっこう (学校)","স্কুল"],
+  post_office:["ゆうびんきょく (郵便局)","পোস্ট অফিস"],
+  supermarket:["スーパー","সুপারমার্কেট"],
+  restaurant:["レストラン","রেস্টুরেন্ট"]
+};
+(async()=>{
+  const html=await (await fetch('index.html?v='+Date.now())).text();
+  const m=html.match(/const SVGS=(\{[\s\S]*?\});/);
+  const SVGS=m?eval('('+m[1]+')'):{};
+  const keys=Object.keys(SVGS);
+  const render=()=>{
+    const s=document.getElementById('q').value.trim().toLowerCase();
+    const list=keys.filter(k=>{
+      const [jp,bn]=META[k]||['',''];
+      return !s||k.includes(s)||jp.toLowerCase().includes(s)||bn.toLowerCase().includes(s);
+    });
+    document.getElementById('cnt').textContent=list.length;
+    document.getElementById('grid').innerHTML=list.map(k=>{
+      const [jp,bn]=META[k]||[k,'—'];
+      return `<div class="card">${SVGS[k]}<div class="jp">${jp}</div><div class="bn">${bn}</div><div class="key">key: ${k}</div></div>`;
+    }).join('');
+  };
+  document.getElementById('q').oninput=render;
+  render();
+})();
+</script>
+</body>
+</html>
