@@ -1,0 +1,402 @@
+[
+  {
+    "id": "m01",
+    "title": "JFT-Basic Mock Test #01",
+    "subtitle": "Full 4-Section CBT · 48 Questions (48–52 Format)",
+    "totalQ": 48,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m02",
+    "title": "JFT-Basic Mock Test #02",
+    "subtitle": "Full 4-Section CBT · 48 Questions (48–52 Format)",
+    "totalQ": 48,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m03",
+    "title": "JFT-Basic Mock Test #03",
+    "subtitle": "Full 4-Section CBT · 49 Questions (48–52 Format)",
+    "totalQ": 49,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m04",
+    "title": "JFT-Basic Mock Test #04",
+    "subtitle": "Full 4-Section CBT · 50 Questions (48–52 Format)",
+    "totalQ": 50,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m05",
+    "title": "JFT-Basic Mock Test #05",
+    "subtitle": "Full 4-Section CBT · 50 Questions (48–52 Format)",
+    "totalQ": 50,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m06",
+    "title": "JFT-Basic Mock Test #06",
+    "subtitle": "Full 4-Section CBT · 51 Questions (48–52 Format)",
+    "totalQ": 51,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m07",
+    "title": "JFT-Basic Mock Test #07",
+    "subtitle": "Full 4-Section CBT · 51 Questions (48–52 Format)",
+    "totalQ": 51,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m08",
+    "title": "JFT-Basic Mock Test #08",
+    "subtitle": "Full 4-Section CBT · 52 Questions (48–52 Format)",
+    "totalQ": 52,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m09",
+    "title": "JFT-Basic Mock Test #09",
+    "subtitle": "Full 4-Section CBT · 52 Questions (48–52 Format)",
+    "totalQ": 52,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m10",
+    "title": "JFT-Basic Mock Test #10",
+    "subtitle": "Full 4-Section CBT · 48 Questions (48–52 Format)",
+    "totalQ": 48,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m11",
+    "title": "JFT-Basic Mock Test #11",
+    "subtitle": "Full 4-Section CBT · 48 Questions (48–52 Format)",
+    "totalQ": 48,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m12",
+    "title": "JFT-Basic Mock Test #12",
+    "subtitle": "Full 4-Section CBT · 49 Questions (48–52 Format)",
+    "totalQ": 49,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m13",
+    "title": "JFT-Basic Mock Test #13",
+    "subtitle": "Full 4-Section CBT · 50 Questions (48–52 Format)",
+    "totalQ": 50,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m14",
+    "title": "JFT-Basic Mock Test #14",
+    "subtitle": "Full 4-Section CBT · 50 Questions (48–52 Format)",
+    "totalQ": 50,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m15",
+    "title": "JFT-Basic Mock Test #15",
+    "subtitle": "Full 4-Section CBT · 51 Questions (48–52 Format)",
+    "totalQ": 51,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m16",
+    "title": "JFT-Basic Mock Test #16",
+    "subtitle": "Full 4-Section CBT · 51 Questions (48–52 Format)",
+    "totalQ": 51,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m17",
+    "title": "JFT-Basic Mock Test #17",
+    "subtitle": "Full 4-Section CBT · 52 Questions (48–52 Format)",
+    "totalQ": 52,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m18",
+    "title": "JFT-Basic Mock Test #18",
+    "subtitle": "Full 4-Section CBT · 52 Questions (48–52 Format)",
+    "totalQ": 52,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m19",
+    "title": "JFT-Basic Mock Test #19",
+    "subtitle": "Full 4-Section CBT · 48 Questions (48–52 Format)",
+    "totalQ": 48,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m20",
+    "title": "JFT-Basic Mock Test #20",
+    "subtitle": "Full 4-Section CBT · 48 Questions (48–52 Format)",
+    "totalQ": 48,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m21",
+    "title": "JFT-Basic Mock Test #21",
+    "subtitle": "Full 4-Section CBT · 49 Questions (48–52 Format)",
+    "totalQ": 49,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m22",
+    "title": "JFT-Basic Mock Test #22",
+    "subtitle": "Full 4-Section CBT · 50 Questions (48–52 Format)",
+    "totalQ": 50,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m23",
+    "title": "JFT-Basic Mock Test #23",
+    "subtitle": "Full 4-Section CBT · 50 Questions (48–52 Format)",
+    "totalQ": 50,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m24",
+    "title": "JFT-Basic Mock Test #24",
+    "subtitle": "Full 4-Section CBT · 51 Questions (48–52 Format)",
+    "totalQ": 51,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m25",
+    "title": "JFT-Basic Mock Test #25",
+    "subtitle": "Full 4-Section CBT · 51 Questions (48–52 Format)",
+    "totalQ": 51,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m26",
+    "title": "JFT-Basic Mock Test #26",
+    "subtitle": "Full 4-Section CBT · 52 Questions (48–52 Format)",
+    "totalQ": 52,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m27",
+    "title": "JFT-Basic Mock Test #27",
+    "subtitle": "Full 4-Section CBT · 52 Questions (48–52 Format)",
+    "totalQ": 52,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m28",
+    "title": "JFT-Basic Mock Test #28",
+    "subtitle": "Full 4-Section CBT · 48 Questions (48–52 Format)",
+    "totalQ": 48,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m29",
+    "title": "JFT-Basic Mock Test #29",
+    "subtitle": "Full 4-Section CBT · 48 Questions (48–52 Format)",
+    "totalQ": 48,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m30",
+    "title": "JFT-Basic Mock Test #30",
+    "subtitle": "Full 4-Section CBT · 49 Questions (48–52 Format)",
+    "totalQ": 49,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m31",
+    "title": "JFT-Basic Mock Test #31",
+    "subtitle": "Full 4-Section CBT · 50 Questions (48–52 Format)",
+    "totalQ": 50,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m32",
+    "title": "JFT-Basic Mock Test #32",
+    "subtitle": "Full 4-Section CBT · 50 Questions (48–52 Format)",
+    "totalQ": 50,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m33",
+    "title": "JFT-Basic Mock Test #33",
+    "subtitle": "Full 4-Section CBT · 51 Questions (48–52 Format)",
+    "totalQ": 51,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m34",
+    "title": "JFT-Basic Mock Test #34",
+    "subtitle": "Full 4-Section CBT · 51 Questions (48–52 Format)",
+    "totalQ": 51,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m35",
+    "title": "JFT-Basic Mock Test #35",
+    "subtitle": "Full 4-Section CBT · 52 Questions (48–52 Format)",
+    "totalQ": 52,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m36",
+    "title": "JFT-Basic Mock Test #36",
+    "subtitle": "Full 4-Section CBT · 52 Questions (48–52 Format)",
+    "totalQ": 52,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m37",
+    "title": "JFT-Basic Mock Test #37",
+    "subtitle": "Full 4-Section CBT · 48 Questions (48–52 Format)",
+    "totalQ": 48,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m38",
+    "title": "JFT-Basic Mock Test #38",
+    "subtitle": "Full 4-Section CBT · 48 Questions (48–52 Format)",
+    "totalQ": 48,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m39",
+    "title": "JFT-Basic Mock Test #39",
+    "subtitle": "Full 4-Section CBT · 49 Questions (48–52 Format)",
+    "totalQ": 49,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m40",
+    "title": "JFT-Basic Mock Test #40",
+    "subtitle": "Full 4-Section CBT · 50 Questions (48–52 Format)",
+    "totalQ": 50,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m41",
+    "title": "JFT-Basic Mock Test #41",
+    "subtitle": "Full 4-Section CBT · 50 Questions (48–52 Format)",
+    "totalQ": 50,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m42",
+    "title": "JFT-Basic Mock Test #42",
+    "subtitle": "Full 4-Section CBT · 51 Questions (48–52 Format)",
+    "totalQ": 51,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m43",
+    "title": "JFT-Basic Mock Test #43",
+    "subtitle": "Full 4-Section CBT · 51 Questions (48–52 Format)",
+    "totalQ": 51,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m44",
+    "title": "JFT-Basic Mock Test #44",
+    "subtitle": "Full 4-Section CBT · 52 Questions (48–52 Format)",
+    "totalQ": 52,
+    "listenQ": 13,
+    "timeMin": 60
+  },
+  {
+    "id": "m45",
+    "title": "JFT-Basic Mock Test #45",
+    "subtitle": "Full 4-Section CBT · 52 Questions (48–52 Format)",
+    "totalQ": 52,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m46",
+    "title": "JFT-Basic Mock Test #46",
+    "subtitle": "Full 4-Section CBT · 48 Questions (48–52 Format)",
+    "totalQ": 48,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m47",
+    "title": "JFT-Basic Mock Test #47",
+    "subtitle": "Full 4-Section CBT · 48 Questions (48–52 Format)",
+    "totalQ": 48,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m48",
+    "title": "JFT-Basic Mock Test #48",
+    "subtitle": "Full 4-Section CBT · 49 Questions (48–52 Format)",
+    "totalQ": 49,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m49",
+    "title": "JFT-Basic Mock Test #49",
+    "subtitle": "Full 4-Section CBT · 50 Questions (48–52 Format)",
+    "totalQ": 50,
+    "listenQ": 12,
+    "timeMin": 60
+  },
+  {
+    "id": "m50",
+    "title": "JFT-Basic Mock Test #50",
+    "subtitle": "Full 4-Section CBT · 50 Questions (48–52 Format)",
+    "totalQ": 50,
+    "listenQ": 13,
+    "timeMin": 60
+  }
+]
