@@ -5,6 +5,7 @@ from extra_pools import (
     EXTRA_SVG_QS, EXTRA_KANJI_READ, EXTRA_KANJI_WRITE, EXTRA_USAGE,
     EXTRA_GRAMMAR, EXTRA_EXPR, EXTRA_READING, EXTRA_LISTEN
 )
+from extra_pools_2 import EXTRA2_KANJI_READ, EXTRA2_GRAMMAR, EXTRA2_EXPR
 
 BASE_DIR = "/data/data/com.termux/files/home/jft-mock-cbt"
 DATA_DIR = os.path.join(BASE_DIR, "data")
@@ -1117,10 +1118,13 @@ def make_q(qid, prompt, jp, opts_cfirst, diff, cat, exp, svg=None, card=None, au
 def merge_pools():
     SEC1_SVG.extend(EXTRA_SVG_QS)
     SEC1_KANJI_READ.extend(EXTRA_KANJI_READ)
+    SEC1_KANJI_READ.extend(EXTRA2_KANJI_READ)
     SEC1_KANJI_WRITE.extend(EXTRA_KANJI_WRITE)
     SEC1_USAGE.extend(EXTRA_USAGE)
     SEC2_GRAMMAR.extend(EXTRA_GRAMMAR)
+    SEC2_GRAMMAR.extend(EXTRA2_GRAMMAR)
     SEC2_EXPR.extend(EXTRA_EXPR)
+    SEC2_EXPR.extend(EXTRA2_EXPR)
     SEC4_ITEMS.extend(EXTRA_READING)
     SEC3_LISTEN_POOL.extend(EXTRA_LISTEN)
 
