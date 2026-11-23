@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 import os, json, random, asyncio, subprocess, tempfile, shutil
 import edge_tts
+from extra_pools import (
+    EXTRA_SVG_QS, EXTRA_KANJI_READ, EXTRA_KANJI_WRITE, EXTRA_USAGE,
+    EXTRA_GRAMMAR, EXTRA_EXPR, EXTRA_READING, EXTRA_LISTEN
+)
 
 BASE_DIR = "/data/data/com.termux/files/home/jft-mock-cbt"
 DATA_DIR = os.path.join(BASE_DIR, "data")
@@ -1110,6 +1114,39 @@ def make_q(qid, prompt, jp, opts_cfirst, diff, cat, exp, svg=None, card=None, au
     if transcript: obj["transcript"] = transcript
     return obj
 
+def merge_pools():
+    SEC1_SVG.extend(EXTRA_SVG_QS)
+    SEC1_KANJI_READ.extend(EXTRA_KANJI_READ)
+    SEC1_KANJI_WRITE.extend(EXTRA_KANJI_WRITE)
+    SEC1_USAGE.extend(EXTRA_USAGE)
+    SEC2_GRAMMAR.extend(EXTRA_GRAMMAR)
+    SEC2_EXPR.extend(EXTRA_EXPR)
+    SEC4_ITEMS.extend(EXTRA_READING)
+    SEC3_LISTEN_POOL.extend(EXTRA_LISTEN)
+
+merge_pools()
+
+USAGE = {
+    "svg": [0]*len(SEC1_SVG),
+    "kr":  [0]*len(SEC1_KANJI_READ),
+    "kw":  [0]*len(SEC1_KANJI_WRITE),
+    "us":  [0]*len(SEC1_USAGE),
+    "gr":  [0]*len(SEC2_GRAMMAR),
+    "ex":  [0]*len(SEC2_EXPR),
+    "ls":  [0]*len(SEC3_LISTEN_POOL),
+    "rd":  [0]*len(SEC4_ITEMS),
+}
+
+def smart_pick(pool, count, ulist, diff_fn):
+    idxs = list(range(len(pool)))
+    random.shuffle(idxs)
+    # Sort so least-used come first; on tie/wrap, prefer hard items for improvement
+    idxs.sort(key=lambda i: (ulist[i], 0 if (ulist[i] > 0 and diff_fn(pool[i]) == "hard") else 1))
+    chosen = idxs[:min(count, len(pool))]
+    for i in chosen:
+        ulist[i] += 1
+    return [pool[i] for i in chosen]
+
 # Section distribution patterns (48 to 52 Qs)
 PATTERNS = [
     (12, 12, 12, 12), # 48
@@ -1128,28 +1165,30 @@ def build_mock(m_num):
     c1, c2, c3, c4 = PATTERNS[(m_num - 1) % len(PATTERNS)]
 
     # Section 1: Script & Vocab (mix SVG + Kanji Read + Kanji Write + Usage)
-    svgs = random.sample(SEC1_SVG, min(4, len(SEC1_SVG)))
-    k_reads = random.sample(SEC1_KANJI_READ, min(4, len(SEC1_KANJI_READ)))
-    k_writes = random.sample(SEC1_KANJI_WRITE, min(3, len(SEC1_KANJI_WRITE)))
-    usages = random.sample(SEC1_USAGE, min(4, len(SEC1_USAGE)))
+    svgs = smart_pick(SEC1_SVG, 3, USAGE["svg"], lambda x: x[3])
+    k_reads = smart_pick(SEC1_KANJI_READ, 4, USAGE["kr"], lambda x: x[2])
+    k_writes = smart_pick(SEC1_KANJI_WRITE, 3, USAGE["kw"], lambda x: x[2])
+    usages = smart_pick(SEC1_USAGE, max(2, c1 - 10), USAGE["us"], lambda x: x[2])
     s1_raw = []
-    for p, j, o, d, ct, e, sv in svgs[:3]:
+    for p, j, o, d, ct, e, sv in svgs:
         s1_raw.append(make_q(f"m{m_num}_s1_{len(s1_raw)}", p, j, o, d, ct, e, svg=sv))
-    for j, o, d, e in k_reads[:4]:
+    for j, o, d, e in k_reads:
         s1_raw.append(make_q(f"m{m_num}_s1_{len(s1_raw)}", "How do you read the highlighted word?", j, o, d, "Kanji Reading", e))
-    for j, o, d, e in k_writes[:3]:
+    for j, o, d, e in k_writes:
         s1_raw.append(make_q(f"m{m_num}_s1_{len(s1_raw)}", "Choose the correct Kanji for the highlighted word.", j, o, d, "Kanji Usage", e))
     for j, o, d, e in usages:
         if len(s1_raw) < c1:
             s1_raw.append(make_q(f"m{m_num}_s1_{len(s1_raw)}", "Choose the best word to fill in the blank.", j, o, d, "Word Usage", e))
-    while len(s1_raw) < c1:
-        j, o, d, e = random.choice(SEC1_KANJI_READ)
-        s1_raw.append(make_q(f"m{m_num}_s1_{len(s1_raw)}", "How do you read the highlighted word?", j, o, d, "Kanji Reading", e))
+    if len(s1_raw) < c1:
+        extra_kr = smart_pick(SEC1_KANJI_READ, c1 - len(s1_raw), USAGE["kr"], lambda x: x[2])
+        for j, o, d, e in extra_kr:
+            s1_raw.append(make_q(f"m{m_num}_s1_{len(s1_raw)}", "How do you read the highlighted word?", j, o, d, "Kanji Reading", e))
     s1_qs = s1_raw[:c1]
 
     # Section 2: Conversation & Expression
-    g_pick = random.sample(SEC2_GRAMMAR, (c2 + 1) // 2)
-    e_pick = random.sample(SEC2_EXPR, c2 - len(g_pick))
+    g_cnt = (c2 + 1) // 2
+    g_pick = smart_pick(SEC2_GRAMMAR, g_cnt, USAGE["gr"], lambda x: x[2])
+    e_pick = smart_pick(SEC2_EXPR, c2 - len(g_pick), USAGE["ex"], lambda x: x[2])
     s2_qs = []
     for j, o, d, e in g_pick:
         s2_qs.append(make_q(f"m{m_num}_s2_{len(s2_qs)}", "Choose the correct grammar to complete the sentence.", j, o, d, "Grammar", e))
@@ -1158,8 +1197,7 @@ def build_mock(m_num):
     random.shuffle(s2_qs)
 
     # Section 3: Listening Comprehension (Multi-persona MP3, supports 1 or 2 Qs per audio)
-    l_pool = list(SEC3_LISTEN_POOL)
-    random.shuffle(l_pool)
+    l_pool = smart_pick(SEC3_LISTEN_POOL, c3, USAGE["ls"], lambda it: it["qs"][0][3])
     s3_qs = []
     for item in l_pool:
         if len(s3_qs) >= c3: break
@@ -1171,9 +1209,8 @@ def build_mock(m_num):
             osvgs = q_tup[5] if len(q_tup) > 5 else None
             s3_qs.append(make_q(f"m{m_num}_s3_{len(s3_qs)}", pr, jp, o, d, "Listening", e, audio=aud_url, transcript=transcript, opt_svgs=osvgs))
 
-    # Section 4: Reading Comprehension (Email, SNS, Coupon, Poster)
-    r_pool = list(SEC4_ITEMS)
-    random.shuffle(r_pool)
+    # Section 4: Reading Comprehension (Email, SNS, Coupon, Poster, Ticket)
+    r_pool = smart_pick(SEC4_ITEMS, c4, USAGE["rd"], lambda it: it[1][0][3])
     s4_qs = []
     for card, qlist in r_pool:
         if len(s4_qs) >= c4: break
