@@ -142,6 +142,13 @@ input:focus,select:focus{outline:2px solid var(--ac);border-color:var(--ac)}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;display:flex;align-items:center;justify-content:center;padding:16px}
 .modal{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;max-width:420px;width:100%;box-shadow:0 16px 40px rgba(0,0,0,.35)}
 .toast{position:fixed;bottom:74px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:600;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.exam-blur .cbt-body,.exam-blur .cbt-foot{filter:blur(16px);pointer-events:none;user-select:none}
+.pause-overlay{position:fixed;inset:0;z-index:45;background:rgba(15,23,42,.68);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;padding:16px}
+.pause-card{background:var(--card);border:2px solid var(--ac);border-radius:18px;padding:24px;max-width:380px;width:100%;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.45)}
+.hist-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.hist-item{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);font-size:13px}
+.hist-item.active{border-color:var(--ac);background:var(--ac-soft)}
+.exp-focus{margin-top:6px;padding:7px 10px;border-radius:8px;background:var(--ac-soft);border-left:3px solid var(--ac);font-size:13px}
 @media print{.noprint{display:none!important}body{background:#fff;color:#000}}
 </style>
 </head>
@@ -192,12 +199,16 @@ input:focus,select:focus{outline:2px solid var(--ac);border-color:var(--ac)}
 <!-- EXAM VIEW -->
 <div id="examView" class="hide">
   <div class="cbt-top">
-    <div>
-      <div style="font-weight:800;font-size:15px" id="exTitle">JFT-Basic Mock</div>
-      <div class="sec-tag" id="exSecLbl">Section 1: Script and Vocabulary</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button type="button" class="btn sec" id="exHomeBtn" style="padding:7px 11px;font-size:13px">🏠 Home</button>
+      <div>
+        <div style="font-weight:800;font-size:15px" id="exTitle">JFT-Basic Mock</div>
+        <div class="sec-tag" id="exSecLbl">Section 1: Script and Vocabulary</div>
+      </div>
     </div>
-    <div style="display:flex;align-items:center;gap:8px">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <div class="cbt-timer" id="exTimer">60:00</div>
+      <button type="button" class="btn sec" id="pauseBtn" style="padding:7px 11px;font-size:13px">⏸ Pause</button>
       <button type="button" class="btn warn" id="finishSecBtn" style="padding:7px 12px;font-size:13px">Finish Section</button>
     </div>
   </div>
@@ -214,6 +225,16 @@ input:focus,select:focus{outline:2px solid var(--ac);border-color:var(--ac)}
       </div>
     </div>
   </div>
+  <div id="pauseOverlay" class="pause-overlay hide">
+    <div class="pause-card">
+      <div style="font-size:32px;margin-bottom:6px">⏸</div>
+      <h3 style="margin:0 0 6px">Exam Paused</h3>
+      <div class="mu" style="margin-bottom:14px">Time ar question lock kora ache. Kaj shesh hole Resume korun.</div>
+      <div style="font-weight:800;font-size:20px;margin-bottom:16px" id="pauseTimeLbl">60:00</div>
+      <button type="button" class="btn" id="resumeBtn" style="width:100%">▶ Resume Exam</button>
+      <button type="button" class="btn sec" id="pauseHomeBtn" style="width:100%;margin-top:8px">🏠 Exit to Home</button>
+    </div>
+  </div>
 </div>
 
 <!-- RESULT VIEW -->
@@ -223,10 +244,11 @@ input:focus,select:focus{outline:2px solid var(--ac);border-color:var(--ac)}
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button type="button" class="btn" id="dlCertBtn">Download Certificate PNG</button>
       <button type="button" class="btn sec" id="retakeBtn">Retake Mock</button>
-      <button type="button" class="btn sec" id="resHomeBtn">All Mocks</button>
+      <button type="button" class="btn sec" id="resHomeBtn">🏠 Home</button>
     </div>
   </div>
   <div id="certContainer"></div>
+  <div id="attemptHistCard" class="card noprint hide"></div>
   <div class="card noprint">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
       <h3 style="margin:0">Answer Review & Bangla Explanations</h3>
@@ -271,6 +293,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const STORE_KEY='jft_cbt_state_v1';
 const THEME_KEY='jft_cbt_theme_v1';
+const ACTIVE_EXAM_KEY='jft_cbt_active_exam_v1';
 
 // Built-in crisp SVG illustrations for JFT Script & Vocabulary
 const SVGS={
@@ -418,7 +441,30 @@ $('themeBtn').onclick=()=>{
   applyTheme(cur==='auto'?'dark':cur==='dark'?'light':'auto');
 };
 
-let mockIndex=[],curFilter='all',curMock=null,secIdx=0,qIdx=0,answers={},flags={},audioPlays={},secTimer=null,secRem=0,activeAudio=null,lastResult=null;
+let mockIndex=[],curFilter='all',curMock=null,secIdx=0,qIdx=0,answers={},flags={},audioPlays={},examTimer=null,examRem=0,activeAudio=null,lastResult=null,isPaused=false;
+
+function saveActiveExam(){
+  if(!curMock||$('examView').classList.contains('hide'))return;
+  try{
+    localStorage.setItem(ACTIVE_EXAM_KEY,JSON.stringify({
+      mockId:curMock.id,
+      isPractice:!!curMock.isPractice,
+      mockData:curMock.isPractice?curMock:null,
+      secIdx,qIdx,answers,flags,audioPlays,examRem,isPaused,
+      savedAt:Date.now()
+    }));
+  }catch(e){}
+}
+function clearActiveExam(){
+  try{localStorage.removeItem(ACTIVE_EXAM_KEY)}catch(e){}
+}
+window.addEventListener('beforeunload',e=>{
+  if(curMock&&!$('examView').classList.contains('hide')){
+    saveActiveExam();
+    e.preventDefault();
+    e.returnValue='';
+  }
+});
 
 function showView(id){
   ['homeView','examView','resultView'].forEach(v=>$(v).classList.toggle('hide',v!==id));
@@ -472,11 +518,13 @@ function renderHome(){
         <span>🎧 ${m.listenQ||12} Audio Qs</span>
       </div>
       <div style="margin-top:auto;padding-top:6px;display:flex;gap:8px">
+        ${r?`<button type="button" class="btn sec view-hist-btn" data-id="${esc(m.id)}">History / Review</button>`:''}
         <button type="button" class="btn start-mock-btn" data-id="${esc(m.id)}" style="flex:1">${r?'Retake Mock':'Start Mock'}</button>
       </div>
     </div>`;
   }).join('');
   $('mockList').querySelectorAll('.start-mock-btn').forEach(b=>b.onclick=()=>launchMock(b.dataset.id));
+  $('mockList').querySelectorAll('.view-hist-btn').forEach(b=>b.onclick=()=>viewMockHistory(b.dataset.id,0));
 }
 
 $('stuNameIn').oninput=()=>{
@@ -513,43 +561,101 @@ $('mistakeBankBtn').onclick=()=>{
     id:'mistake_practice',
     title:'Mistake Bank Practice',
     isPractice:true,
+    timeMin:25,
     sections:[{name:'Weak Areas Review',timeMin:25,questions:pick}]
   };
   startExamSession();
 };
 
+function startExamTimer(){
+  clearInterval(examTimer);
+  examTimer=setInterval(()=>{
+    if(isPaused)return;
+    examRem--;updTimer();
+    if(examRem%5===0)saveActiveExam();
+    if(examRem<=0){clearInterval(examTimer);stopActiveAudio();finishExam()}
+  },1000);
+}
+
+function pauseExam(){
+  if(isPaused)return;
+  isPaused=true;
+  clearInterval(examTimer);
+  stopActiveAudio();
+  $('examView').classList.add('exam-blur');
+  $('pauseTimeLbl').textContent=$('exTimer').textContent;
+  $('pauseOverlay').classList.remove('hide');
+  saveActiveExam();
+}
+
+function resumeExam(){
+  if(!isPaused)return;
+  isPaused=false;
+  $('examView').classList.remove('exam-blur');
+  $('pauseOverlay').classList.add('hide');
+  startExamTimer();
+  saveActiveExam();
+}
+
+$('pauseBtn').onclick=pauseExam;
+$('resumeBtn').onclick=resumeExam;
+
+function confirmExitToHome(){
+  showModal(
+    'Leave Exam & Go Home?',
+    'Exam ekhono cholche. Home-e fire gele ei running exam session bondho hoye jabe (ei attempt-er progress save thakbe na). Apni ki sure?',
+    'Leave Exam',
+    ()=>{
+      clearInterval(examTimer);
+      stopActiveAudio();
+      clearActiveExam();
+      isPaused=false;
+      $('examView').classList.remove('exam-blur');
+      $('pauseOverlay').classList.add('hide');
+      curMock=null;
+      showView('homeView');
+      renderHome();
+    }
+  );
+}
+$('exHomeBtn').onclick=confirmExitToHome;
+$('pauseHomeBtn').onclick=confirmExitToHome;
+
 function startExamSession(){
+  stopActiveAudio();
+  clearInterval(examTimer);
+  isPaused=false;
+  $('examView').classList.remove('exam-blur');
+  $('pauseOverlay').classList.add('hide');
   secIdx=0;qIdx=0;answers={};flags={};audioPlays={};
   showView('examView');
   $('exTitle').textContent=curMock.title;
+  examRem=(curMock.timeMin||60)*60;
+  updTimer();
+  startExamTimer();
   startSection(0);
+  saveActiveExam();
 }
 
 function stopActiveAudio(){
   if(activeAudio){try{activeAudio.pause();activeAudio.currentTime=0}catch(e){}activeAudio=null}
 }
 
-function startSection(si){
+function startSection(si,keepQ){
   stopActiveAudio();
-  clearInterval(secTimer);
-  secIdx=si;qIdx=0;
+  secIdx=si;if(!keepQ)qIdx=0;
   const sec=curMock.sections[si];
   $('exSecLbl').textContent=`Section ${si+1}/${curMock.sections.length}: ${sec.name}`;
   $('finishSecBtn').textContent=si<curMock.sections.length-1?'Finish Section':'Submit Exam';
-  secRem=(sec.timeMin||15)*60;
-  updTimer();
-  secTimer=setInterval(()=>{
-    secRem--;updTimer();
-    if(secRem<=0){clearInterval(secTimer);advanceSection(true)}
-  },1000);
   renderQuestion();
+  saveActiveExam();
 }
 
 function updTimer(){
-  const m=String(Math.floor(Math.max(0,secRem)/60)).padStart(2,'0');
-  const s=String(Math.max(0,secRem)%60).padStart(2,'0');
+  const m=String(Math.floor(Math.max(0,examRem)/60)).padStart(2,'0');
+  const s=String(Math.max(0,examRem)%60).padStart(2,'0');
   $('exTimer').textContent=`${m}:${s}`;
-  $('exTimer').classList.toggle('low',secRem<=120);
+  $('exTimer').classList.toggle('low',examRem<=300);
 }
 
 function formatJp(text){
@@ -571,7 +677,7 @@ function renderSvg25D(raw){
     .replace(/<\/svg>/i,`</g><rect x="2" y="2" width="176" height="136" rx="12" fill="url(#${uid}gl)" pointer-events="none"/></svg>`);
   return out;
 }
-function renderStimulus(q){
+function renderStimulus(q,qKey){
   let h='';
   if(q.svg&&SVGS[q.svg]){
     h+=`<div class="stim-box svg-box">${renderSvg25D(SVGS[q.svg])}</div>`;
@@ -594,7 +700,7 @@ function renderStimulus(q){
     h+=`<div class="stim-box dial-card">${q.dialogue.map(l=>`<div class="dial-line"><span class="dial-spk">${esc(l.spk)}:</span>${formatJp(l.txt)}</div>`).join('')}</div>`;
   }
   if(q.audio){
-    const aKey=q.audio;
+    const aKey=qKey||q.id||q.audio;
     const left=Math.max(0,2-(audioPlays[aKey]||0));
     h+=`<div class="aud-box">
       <button type="button" class="btn" id="playAudBtn" ${left<=0?'disabled':''}>▶ Play Audio</button>
@@ -614,7 +720,7 @@ function renderQuestion(){
     const cls=['q-chip',i===qIdx?'cur':(answers[k]!==undefined?'ans':''),flags[k]?'flg':''].filter(Boolean).join(' ');
     return `<button type="button" class="${cls}" data-i="${i}">${i+1}</button>`;
   }).join('');
-  $('qPalette').querySelectorAll('.q-chip').forEach(b=>b.onclick=()=>{qIdx=+b.dataset.i;renderQuestion()});
+  $('qPalette').querySelectorAll('.q-chip').forEach(b=>b.onclick=()=>{qIdx=+b.dataset.i;renderQuestion();saveActiveExam()});
 
   const sel=answers[key];
   $('qContainer').innerHTML=`
@@ -623,7 +729,7 @@ function renderQuestion(){
       <span class="pill info">${esc(q.cat||sec.name)}</span>
     </div>
     ${q.prompt?`<div class="q-prompt">${esc(q.prompt)}</div>`:''}
-    ${renderStimulus(q)}
+    ${renderStimulus(q,key)}
     ${q.jp?`<div class="q-jp">${formatJp(q.jp)}</div>`:''}
     ${q.optSvgs&&Array.isArray(q.optSvgs)
       ?`<div class="opt-svg-grid">${q.optSvgs.map((sv,oi)=>`<button type="button" class="opt-svg-btn${sel===oi?' sel':''}" data-o="${oi}">
@@ -640,18 +746,20 @@ function renderQuestion(){
   $('qContainer').querySelectorAll('.opt-btn,.opt-svg-btn').forEach(b=>b.onclick=()=>{
     answers[key]=+b.dataset.o;
     renderQuestion();
+    saveActiveExam();
   });
 
   const playBtn=$('playAudBtn');
   if(playBtn){
     playBtn.onclick=()=>{
-      const aKey=q.audio;
+      const aKey=key;
       const used=audioPlays[aKey]||0;
       if(used>=2)return;
       if(activeAudio&&!activeAudio.paused){return}
-      const aud=new Audio(aKey);
+      const aud=new Audio(q.audio);
       activeAudio=aud;
       audioPlays[aKey]=used+1;
+      saveActiveExam();
       const left=Math.max(0,2-audioPlays[aKey]);
       $('audLeft').textContent=`Plays left: ${left} / 2`;
       playBtn.disabled=true;playBtn.textContent='🔊 Playing...';
@@ -663,12 +771,17 @@ function renderQuestion(){
         playBtn.textContent='▶ Play Audio';
         playBtn.disabled=(2-(audioPlays[aKey]||0))<=0;
       };
-      aud.onerror=()=>{
-        toast('Audio file load hoyni');
+      const rollback=()=>{
+        audioPlays[aKey]=used;
+        $('audLeft').textContent=`Plays left: ${Math.max(0,2-used)} / 2`;
         playBtn.textContent='▶ Play Audio';
         playBtn.disabled=false;
       };
-      aud.play().catch(()=>{playBtn.disabled=false;playBtn.textContent='▶ Play Audio'});
+      aud.onerror=()=>{
+        toast('Audio file load hoyni');
+        rollback();
+      };
+      aud.play().catch(()=>rollback());
     };
   }
 
@@ -678,12 +791,12 @@ function renderQuestion(){
 }
 
 $('flagQBtn').onclick=()=>{
-  const key=`${secIdx}_${qIdx}`;flags[key]=!flags[key];renderQuestion();
+  const key=`${secIdx}_${qIdx}`;flags[key]=!flags[key];renderQuestion();saveActiveExam();
 };
-$('prevQBtn').onclick=()=>{if(qIdx>0){qIdx--;renderQuestion()}};
+$('prevQBtn').onclick=()=>{if(qIdx>0){qIdx--;renderQuestion();saveActiveExam()}};
 $('nextQBtn').onclick=()=>{
   const qs=curMock.sections[secIdx].questions;
-  if(qIdx<qs.length-1){qIdx++;renderQuestion()}
+  if(qIdx<qs.length-1){qIdx++;renderQuestion();saveActiveExam()}
   else $('finishSecBtn').click();
 };
 
@@ -712,9 +825,9 @@ $('finishSecBtn').onclick=()=>{
 };
 
 function advanceSection(){
-  clearInterval(secTimer);stopActiveAudio();
+  stopActiveAudio();
   if(secIdx<curMock.sections.length-1)startSection(secIdx+1);
-  else finishExam();
+  else{clearInterval(examTimer);finishExam()}
 }
 
 function getDiffWeight(d){return d==='hard'?1.5:(d==='medium'?1.25:1.0)}
@@ -726,6 +839,10 @@ function getBand(score){
 }
 
 function finishExam(){
+  clearInterval(examTimer);stopActiveAudio();clearActiveExam();
+  isPaused=false;
+  $('examView').classList.remove('exam-blur');
+  $('pauseOverlay').classList.add('hide');
   let totalW=0,earnedW=0,totOk=0,totQ=0;
   const secRes=[],reviewItems=[];
   const st=loadState();
@@ -748,15 +865,138 @@ function finishExam(){
   const bandInfo=getBand(score);
   const stuName=$('stuNameIn').value.trim()||st.name||'Candidate';
   const dateStr=new Date().toLocaleDateString('en-GB',{year:'numeric',month:'short',day:'numeric'});
+  const timeStr=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
 
   if(!curMock.isPractice){
-    st.results[curMock.id]={score,band:bandInfo.band,pass:bandInfo.pass,totOk,totQ,date:dateStr};
+    const prev=st.results[curMock.id]||{};
+    const attempt={score,band:bandInfo.band,pass:bandInfo.pass,totOk,totQ,date:dateStr,time:timeStr,secRes,answers:{...answers}};
+    const prevAtt=Array.isArray(prev.attempts)?prev.attempts:[];
+    const attempts=[attempt,...prevAtt].slice(0,10);
+    st.results[curMock.id]={...attempt,attempts};
   }
   saveState(st);
 
-  lastResult={title:curMock.title,stuName,score,bandInfo,totOk,totQ,secRes,dateStr,reviewItems};
+  lastResult={mockId:curMock.id,title:curMock.title,stuName,score,bandInfo,totOk,totQ,secRes,dateStr,reviewItems};
+  renderAttemptHistory(curMock.id,0);
   renderResult(false);
   showView('resultView');
+}
+
+function findFocusLine(text,q){
+  if(!text)return'';
+  const lines=String(text).split(/[\n。]+/).map(s=>s.trim()).filter(Boolean);
+  if(!lines.length)return'';
+  const ansTxt=(q.opts&&q.opts[q.ans])||'';
+  const expTxt=q.exp||'';
+  const quoteMatch=expTxt.match(/「([^」]+)」/);
+  if(quoteMatch){
+    const qLine=lines.find(l=>l.includes(quoteMatch[1].slice(0,10)));
+    if(qLine)return qLine;
+  }
+  const jpToks=(String(q.jp||'').match(/[0-9０-９]+|[一-龥ァ-ヶー]{2,}|[ぁ-ん]{3,}/g)||[]);
+  const ansToks=(ansTxt.match(/[0-9０-９]+|[一-龥ァ-ヶー]{2,}|[ぁ-ん]{2,}/g)||[]);
+  const expToks=(expTxt.match(/[0-9０-９]+|[一-龥ァ-ヶー]{2,}|[ぁ-ん]{2,}/g)||[]);
+  let best='',bestScore=0;
+  for(const l of lines){
+    let sc=0;
+    for(const t of ansToks)if(l.includes(t))sc+=t.length*3;
+    for(const t of expToks)if(l.includes(t))sc+=t.length*2;
+    for(const t of jpToks)if(l.includes(t))sc+=t.length;
+    if(sc>bestScore){bestScore=sc;best=l;}
+  }
+  return bestScore>=2?best:'';
+}
+
+function buildDetailedExp(q,u,isOk){
+  const parts=[];
+  const cat=(q.cat||'').toLowerCase();
+  const hl=(String(q.jp||'').match(/【([^】]+)】/)||[])[1];
+  const ansTxt=q.opts&&q.opts[q.ans]?q.opts[q.ans]:'';
+  const usrTxt=u!==undefined&&q.opts&&q.opts[u]?q.opts[u]:'';
+
+  if(cat.includes('kanji reading')&&hl){
+    parts.push(`<div><b>Target Kanji:</b> <span class="k-hl">${esc(hl)}</span> → Sothik reading: <b style="color:var(--ok)">${esc(ansTxt)}</b></div>`);
+    if(!isOk&&usrTxt)parts.push(`<div class="mu">Apni <b>${esc(usrTxt)}</b> diyechilen, kintu <b>${esc(hl)}</b>-er asol reading holo <b>${esc(ansTxt)}</b>.</div>`);
+  }else if(cat.includes('kanji usage')&&hl){
+    parts.push(`<div><b>Target Word:</b> <span class="k-hl">${esc(hl)}</span> → Sothik Kanji: <b style="color:var(--ok)">${esc(ansTxt)}</b></div>`);
+    if(!isOk&&usrTxt)parts.push(`<div class="mu">Apni <b>${esc(usrTxt)}</b> diyechilen, kintu <b>${esc(hl)}</b> lekhar sothik kanji holo <b>${esc(ansTxt)}</b>.</div>`);
+  }else if(cat.includes('reading')){
+    const focus=findFocusLine(q.card&&q.card.body,q);
+    if(focus)parts.push(`<div class="exp-focus"><b>🎯 Focus Line (Jekhane Answer Ache):</b><br>${esc(focus)}</div>`);
+  }else if(cat.includes('listening')){
+    const focus=findFocusLine(q.transcript,q);
+    if(focus)parts.push(`<div class="exp-focus"><b>🎯 Audio-r Key Line:</b><br>${esc(focus)}</div>`);
+  }
+
+  if(q.exp){
+    parts.push(`<div style="margin-top:${parts.length?6:0}px"><b>💡 ${cat.includes('kanji')?'Ortho & Note':'Kemne Bujhben (Explanation)'}:</b> ${esc(q.exp)}</div>`);
+  }
+  if(!parts.length)return'';
+  return `<div class="exp-box">${parts.join('')}</div>`;
+}
+
+function renderAttemptHistory(mockId,activeIdx){
+  const box=$('attemptHistCard');
+  if(!mockId||curMock&&curMock.isPractice){box.classList.add('hide');return}
+  const st=loadState(),r=(st.results||{})[mockId];
+  const attempts=(r&&Array.isArray(r.attempts)&&r.attempts.length)?r.attempts:(r?[r]:[]);
+  if(!attempts.length){box.classList.add('hide');return}
+  box.classList.remove('hide');
+  box.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+    <h3 style="margin:0">Attempt History (${attempts.length})</h3>
+    <span class="mu">Kon attempt-e koto peyechen o ki bhul chilo dekhte View korun</span>
+  </div>
+  <div class="hist-list">${attempts.map((a,idx)=>`<div class="hist-item${idx===activeIdx?' active':''}">
+    <div>
+      <b>Attempt #${attempts.length-idx}</b> · <span class="mu">${esc(a.date||'')}${a.time?' '+esc(a.time):''}</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="pill ${a.pass?'pass':'fail'}">${a.score}/250 (${esc(a.band)}) · ${a.totOk}/${a.totQ}</span>
+      ${a.answers?`<button type="button" class="btn sec view-att-btn" data-idx="${idx}" style="padding:5px 10px;font-size:12px">${idx===activeIdx?'Viewing':'View'}</button>`:'<span class="mu" style="font-size:11px">Old record</span>'}
+    </div>
+  </div>`).join('')}</div>`;
+  box.querySelectorAll('.view-att-btn').forEach(b=>b.onclick=()=>viewMockHistory(mockId,+b.dataset.idx));
+}
+
+async function viewMockHistory(id,attemptIdx){
+  const st=loadState(),r=(st.results||{})[id];
+  if(!r){toast('Ei mock-er kono history nei');return}
+  const attempts=(Array.isArray(r.attempts)&&r.attempts.length)?r.attempts:[r];
+  const att=attempts[attemptIdx]||attempts[0];
+  try{
+    const res=await fetch(`data/${id}.json?v=${Date.now()}`);
+    if(!res.ok)throw new Error('Mock file not found');
+    curMock=await res.json();
+    const ansMap=att.answers||{};
+    const secRes=[],reviewItems=[];
+    curMock.sections.forEach((sec,si)=>{
+      let sOk=0,sQ=sec.questions.length;
+      sec.questions.forEach((q,qi)=>{
+        const k=`${si}_${qi}`,u=ansMap[k],isOk=u===q.ans;
+        if(isOk)sOk++;
+        reviewItems.push({sec:sec.name,num:qi+1,q,u,isOk});
+      });
+      secRes.push({name:sec.name,ok:sOk,q:sQ,pct:sQ?Math.round(sOk*100/sQ):0});
+    });
+    const finalSecRes=(att.secRes&&att.secRes.length)?att.secRes:secRes;
+    const stuName=$('stuNameIn').value.trim()||st.name||'Candidate';
+    lastResult={
+      mockId:id,
+      title:curMock.title,
+      stuName,
+      score:att.score,
+      bandInfo:getBand(att.score),
+      totOk:att.totOk,
+      totQ:att.totQ,
+      secRes:finalSecRes,
+      dateStr:att.date+(att.time?' · '+att.time:''),
+      reviewItems,
+      noSavedAnswers:!att.answers
+    };
+    renderAttemptHistory(id,attemptIdx);
+    renderResult(false);
+    showView('resultView');
+  }catch(e){toast('History load kora jayni: '+e.message)}
 }
 
 function renderResult(wrongOnly){
@@ -778,11 +1018,11 @@ function renderResult(wrongOnly){
   </div>`;
 
   const items=wrongOnly?r.reviewItems.filter(x=>!x.isOk):r.reviewItems;
-  $('reviewList').innerHTML=items.length?items.map(x=>{
+  $('reviewList').innerHTML=(r.noSavedAnswers?'<div class="pill warn" style="margin-bottom:10px">Ei puraton attempt-er individual answer save chilo na; notun attempt theke sob details save hobe.</div>':'')+(items.length?items.map(x=>{
     const q=x.q;
     return `<div class="rev-item ${x.isOk?'ok':'bad'}">
       <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px">
-        <strong>${esc(x.sec)} — Q${x.num}</strong>
+        <strong>${esc(x.sec)} — Q${x.num} <span class="mu">(${esc(q.cat||'')})</span></strong>
         <span class="pill ${x.isOk?'pass':'fail'}">${x.isOk?'✓ Correct':'✕ Wrong'}</span>
       </div>
       ${q.jp?`<div style="font-size:16px;font-weight:700;margin-bottom:6px">${formatJp(q.jp)}</div>`:''}
@@ -791,9 +1031,9 @@ function renderResult(wrongOnly){
         Your Answer: <b style="color:${x.isOk?'var(--ok)':'var(--bad)'}">${x.u!==undefined?esc(q.opts[x.u]):'Not Answered'}</b>
         ${!x.isOk?` · Correct: <b style="color:var(--ok)">${esc(q.opts[q.ans])}</b>`:''}
       </div>
-      ${q.exp?`<div class="exp-box"><b>Explanation:</b> ${esc(q.exp)}</div>`:''}
+      ${buildDetailedExp(q,x.u,x.isOk)}
     </div>`;
-  }).join(''):'<div class="mu">Sob question-i thik hoyeche! 🎉</div>';
+  }).join(''):'<div class="mu">Sob question-i thik hoyeche! 🎉</div>');
 }
 
 $('revAllBtn').onclick=()=>{$('revAllBtn').classList.add('sel');$('revWrongBtn').classList.remove('sel');renderResult(false)};
@@ -862,6 +1102,40 @@ $('clearDataBtn').onclick=()=>{
     mockIndex=await r.json();
   }catch(e){mockIndex=[]}
   renderHome();
+  try{
+    const raw=localStorage.getItem(ACTIVE_EXAM_KEY);
+    if(raw){
+      const saved=JSON.parse(raw);
+      if(saved&&saved.mockId){
+        if(saved.isPractice&&saved.mockData){curMock=saved.mockData}
+        else{
+          const r=await fetch(`data/${saved.mockId}.json?v=${Date.now()}`);
+          if(r.ok)curMock=await r.json();
+        }
+        if(curMock&&curMock.sections&&curMock.sections[saved.secIdx]){
+          secIdx=saved.secIdx||0;
+          qIdx=saved.qIdx||0;
+          answers=saved.answers||{};
+          flags=saved.flags||{};
+          audioPlays=saved.audioPlays||{};
+          examRem=typeof saved.examRem==='number'?saved.examRem:((curMock.timeMin||60)*60);
+          isPaused=!!saved.isPaused;
+          showView('examView');
+          $('exTitle').textContent=curMock.title;
+          updTimer();
+          startSection(secIdx,true);
+          if(isPaused){
+            $('examView').classList.add('exam-blur');
+            $('pauseTimeLbl').textContent=$('exTimer').textContent;
+            $('pauseOverlay').classList.remove('hide');
+          }else{
+            startExamTimer();
+          }
+          toast('Refresh-er ager exam session restore hoyeche!');
+        }else{clearActiveExam()}
+      }
+    }
+  }catch(e){clearActiveExam()}
 })();
 </script>
 </body>
